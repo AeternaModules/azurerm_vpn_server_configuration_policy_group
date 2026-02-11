@@ -16,8 +16,8 @@ EOT
   type = map(object({
     name                        = string
     vpn_server_configuration_id = string
-    is_default                  = optional(bool, false)
-    priority                    = optional(number, 0)
+    is_default                  = optional(bool)   # Default: false
+    priority                    = optional(number) # Default: 0
     policy = object({
       name  = string
       type  = string
