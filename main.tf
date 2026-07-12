@@ -6,10 +6,13 @@ resource "azurerm_vpn_server_configuration_policy_group" "vpn_server_configurati
   is_default                  = each.value.is_default
   priority                    = each.value.priority
 
-  policy {
-    name  = each.value.policy.name
-    type  = each.value.policy.type
-    value = each.value.policy.value
+  dynamic "policy" {
+    for_each = each.value.policy
+    content {
+      name  = policy.value.name
+      type  = policy.value.type
+      value = policy.value.value
+    }
   }
 }
 
