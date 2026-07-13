@@ -16,14 +16,22 @@ EOT
   type = map(object({
     name                        = string
     vpn_server_configuration_id = string
-    is_default                  = optional(bool)   # Default: false
-    priority                    = optional(number) # Default: 0
+    is_default                  = optional(bool)
+    priority                    = optional(number)
     policy = list(object({
       name  = string
       type  = string
       value = string
     }))
   }))
+  validation {
+    condition = alltrue([
+      for k, v in var.vpn_server_configuration_policy_groups : (
+        length(v.policy) >= 1
+      )
+    ])
+    error_message = "Each policy list must contain at least 1 items"
+  }
   # --- Unconfirmed validation candidates, derived from azurerm_vpn_server_configuration_policy_group's provider source ---
   # Not auto-enabled: either a bespoke provider validator we can't safely translate,
   # or a path that crosses a list-typed block (needs its own for_each wrapping).
